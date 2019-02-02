@@ -58,7 +58,7 @@ export class ApiProvider extends React.PureComponent<IProps, IState> {
 		this.setState({
 			loadingCustomers: true,
 		});
-		const response = await axios.get<ICustomer[]>(`/customer/seach/${expression}`, {
+		const response = await axios.get<ICustomer[]>(`/customer/search/${expression}`, {
 			baseURL: this.props.baseUrl,
 		});
 		this.setState({
