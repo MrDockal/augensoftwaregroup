@@ -6,8 +6,10 @@ import { IPagination } from '../../Model/IPagination';
 export interface ApiContextValueCustomer {
 	customers: ICustomer[];
 	isLoading: boolean;
-	load(): Promise<void>;
-	search(expression: string): Promise<void>;
+	load(pageNumber: number): Promise<void>;
+	search(expression: string, pageNumber: number): Promise<void>;
+	page: number;
+	pageCount: number;
 }
 
 export interface ApiContextValue {
@@ -25,6 +27,8 @@ interface IProps {
 interface ICustomerState {
 	customers: ICustomer[];
 	isLoading: boolean;
+	page: number;
+	pageCount: number;
 }
 
 interface IState {
@@ -36,6 +40,8 @@ export class ApiProvider extends React.PureComponent<IProps, IState> {
 		customer: {
 			customers: [],
 			isLoading: false,
+			page: 1,
+			pageCount: 0,
 		}
 	};
 
@@ -47,6 +53,8 @@ export class ApiProvider extends React.PureComponent<IProps, IState> {
 					isLoading: this.state.customer.isLoading,
 					load: this.loadCustomers,
 					search: this.searchCustomers,
+					page: this.state.customer.page,
+					pageCount: this.state.customer.pageCount,
 				}
 			}}>
 				{this.props.children}
@@ -54,38 +62,50 @@ export class ApiProvider extends React.PureComponent<IProps, IState> {
 		)
 	}
 
-	private loadCustomers = async () => {
+	private loadCustomers = async (page?: number) => {
+		const pageNumber = (page) ? page : 1;
 		this.setState({
 			customer: {
 				...this.state.customer,
 				isLoading: true,
+				page: pageNumber,
 			}
 		});
-		const response = await axios.get<IPagination<ICustomer>>('/customer', {
+		const pageParameters = (pageNumber) ? `?page=${pageNumber}` : '';
+		const response = await axios.get<IPagination<ICustomer>>(`/customer${pageParameters}`, {
 			baseURL: this.props.baseUrl,
 		});
 		this.setState({
 			customer: {
+				...this.state.customer,
 				customers: response.data.data,
 				isLoading: false,
+				page: parseInt(response.data.page.toString()),
+				pageCount: parseInt(response.data.pageCount.toString()),
 			}
 		});
 	}
 
-	private searchCustomers = async(expression: string) => {
+	private searchCustomers = async(expression: string, page?: number) => {
+		const pageNumber = (page) ? page : 1;
 		this.setState({
 			customer: {
 				...this.state.customer,
 				isLoading: true,
+				page: pageNumber,
 			}
 		});
-		const response = await axios.get<IPagination<ICustomer>>(`/customer/search/${expression}`, {
+		const pageParameters = (pageNumber) ? `?page=${pageNumber}` : '';
+		const response = await axios.get<IPagination<ICustomer>>(`/customer/search/${expression}${pageParameters}`, {
 			baseURL: this.props.baseUrl,
 		});
 		this.setState({
 			customer: {
+				...this.state.customer,
 				customers: response.data.data,
 				isLoading: false,
+				page: parseInt(response.data.page.toString()),
+				pageCount: parseInt(response.data.pageCount.toString()),
 			}
 		});
 	}
