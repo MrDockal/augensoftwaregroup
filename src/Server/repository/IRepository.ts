@@ -6,7 +6,7 @@ export interface FindAllFilter {
 }
 
 export interface ICustomerRepository {
-	findAll(filter: FindAllFilter): Promise<ICustomer[]>;
+	findAll(filter?: FindAllFilter): Promise<ICustomer[]>;
 	findByEmail(email: string): Promise<ICustomer | null>;
 }
 
