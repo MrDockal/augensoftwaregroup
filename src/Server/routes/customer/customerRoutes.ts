@@ -14,5 +14,10 @@ export const customerRoutes = (
 		});
 		res.send(foundCustomers);
 	});
+	router.get('/search/:expression', async(req: express.Request, res: express.Response) => {
+		const expression = req.params.expression;
+		const foundCustomers = await customerRepository.searchFulltext(expression);
+		res.send(foundCustomers);
+	});
 	return router;
 }

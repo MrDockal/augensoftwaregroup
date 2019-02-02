@@ -3,9 +3,10 @@ import { ICustomer } from '../../Model/ICustomer';
 import axios from 'axios';
 
 export interface ApiContextValue {
-	customers: ICustomer[],
+	customers: ICustomer[];
 	loadingCustomers: boolean;
-	loadCustomers(): Promise<void>,
+	loadCustomers(): Promise<void>;
+	searchCustomers(expression: string): Promise<void>;
 }
 
 const ApiContext = React.createContext<ApiContextValue>({
@@ -33,6 +34,7 @@ export class ApiProvider extends React.PureComponent<IProps, IState> {
 				customers: this.state.customers,
 				loadingCustomers: this.state.loadingCustomers,
 				loadCustomers: this.loadCustomers,
+				searchCustomers: this.searchCustomers,
 			}}>
 				{this.props.children}
 			</ApiContext.Provider>
@@ -44,6 +46,19 @@ export class ApiProvider extends React.PureComponent<IProps, IState> {
 			loadingCustomers: true,
 		});
 		const response = await axios.get<ICustomer[]>('/customer', {
+			baseURL: this.props.baseUrl,
+		});
+		this.setState({
+			loadingCustomers: false,
+			customers: response.data
+		});
+	}
+
+	private searchCustomers = async(expression: string) => {
+		this.setState({
+			loadingCustomers: true,
+		});
+		const response = await axios.get<ICustomer[]>(`/customer/seach/${expression}`, {
 			baseURL: this.props.baseUrl,
 		});
 		this.setState({

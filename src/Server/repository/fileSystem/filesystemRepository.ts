@@ -12,6 +12,13 @@ export const findAllCustomers = async (allCustomers: ICustomer[], filter?: FindA
 	return allCustomers.slice(offset, limit);
 }
 
+export const searchFulltext = async (allCustomers: ICustomer[], fulltext: string) => {
+	return allCustomers.filter((customer: ICustomer) => {
+		const values = Object.keys(customer).map((key: string) => (customer as any)[key]); //cannot be properly typed
+		return values.find((value: string) => value.indexOf(fulltext) > -1);
+	});
+}
+
 export const createFilesystemRepository = async (customerFilePath: string): Promise<IRepository> => {
 	const allCustomers = await loadCsvFile<ICustomer>(customerFilePath);
 	const findByEmail = async () => null;
@@ -21,6 +28,9 @@ export const createFilesystemRepository = async (customerFilePath: string): Prom
 				return findAllCustomers(allCustomers, filter);
 			},
 			findByEmail,
+			searchFulltext: async(fulltext: string) => {
+				return searchFulltext(allCustomers, fulltext);
+			}
 		},
 	}
 };

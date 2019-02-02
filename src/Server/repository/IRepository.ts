@@ -8,6 +8,7 @@ export interface FindAllFilter {
 export interface ICustomerRepository {
 	findAll(filter?: FindAllFilter): Promise<ICustomer[]>;
 	findByEmail(email: string): Promise<ICustomer | null>;
+	searchFulltext(expression: string): Promise<ICustomer[]>;
 }
 
 export interface IRepository {
