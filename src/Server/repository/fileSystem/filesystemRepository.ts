@@ -7,8 +7,12 @@ export const loadCsvFile = async <T extends any>(filePath: string) => {
 }
 
 export const searchFulltext = async (allCustomers: ICustomer[], fulltext: string) => {
+	const allowedValues = ['first_name', 'last_name', 'phone1', 'email'];
 	return allCustomers.filter((customer: ICustomer) => {
-		const values = Object.keys(customer).map((key: string) => (customer as any)[key]); //cannot be properly typed
+		const values = Object.keys(customer)
+			.filter((key: string) => allowedValues.indexOf(key) >= 0)
+			.map((key: string) => (customer as any)[key]) //cannot be properly typed
+		;
 		return values.find((value: string) => value.indexOf(fulltext) > -1);
 	});
 }
