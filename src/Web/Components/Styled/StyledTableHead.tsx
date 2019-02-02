@@ -5,7 +5,7 @@ export const StyledTableHead = styled.th`
 	background: #1b1e24;
 	border-bottom: 4px solid #9ea7af;
 	border-right: 1px solid #343a45;
-	font-size: 19px;
+	font-size: 18px;
 	font-weight: 100;
 	padding: 14px;
 	text-align: left;

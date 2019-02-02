@@ -1,5 +1,5 @@
 import * as React from 'react';
-import App from '../../Web/App';
+import App, { IAppProps } from '../../Web/App';
 import * as express from 'express';
 import { renderToString } from 'react-dom/server';
 import { html } from '../html';
@@ -15,8 +15,12 @@ export const createApplicationRouter = (
 	app.use(cors());
 	app.use(express.static(staticPath));
 
+	const apiRoute = '/api/v1';
 	const reactAppRouting = (_req: express.Request, res: express.Response) => {
-		const appProps: any = {
+		const appProps: IAppProps = {
+			config: {
+				baseURL: apiRoute,
+			}
 		};
 		const body = renderToString(React.createElement<any>(
 			App,

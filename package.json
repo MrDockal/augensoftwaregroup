@@ -34,7 +34,6 @@
     "test": "echo \"No tests exists\""
   },
   "dependencies": {
-    "axios": "^0.18.0",
     "babel-minify": "^0.4.1",
     "child_process": "^1.0.2",
     "classnames": "^2.2.5",
@@ -52,6 +51,7 @@
     "source-map-support": "^0.5.9"
   },
   "devDependencies": {
+    "@types/axios": "^0.14.0",
     "@types/classnames": "^2.2.3",
     "@types/cors": "^2.8.4",
     "@types/csvtojson": "^1.1.5",
@@ -66,6 +66,7 @@
     "@types/styled-components": "^4.1.6",
     "autoprefixer": "^8.5.0",
     "awesome-typescript-loader": "^3.4.1",
+    "axios": "^0.18.0",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.5",
