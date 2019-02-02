@@ -4,11 +4,13 @@ import * as express from 'express';
 import { renderToString } from 'react-dom/server';
 import { html } from '../html';
 import * as cors from 'cors';
-//const parameters = require('../../../configs/parameters');
+import { IRepository } from '../repository/IRepository';
+import { customerRoutes } from './customer/customerRoutes';
 
-export const createStaticServer = (
+export const createApplicationRouter = (
 	app: express.Application,
 	staticPath: string,
+	repository: IRepository,
 ) => {
 	app.use(cors());
 	app.use(express.static(staticPath));
@@ -27,5 +29,11 @@ export const createStaticServer = (
 		);
 	};
 
-	app.get('/app', reactAppRouting);
+
+	app.get('/', reactAppRouting);
+
+	const publicRouter = express.Router();
+	publicRouter.use('/customer', customerRoutes(repository.customer));
+
+	app.use('/api/v1', publicRouter);
 };
