@@ -25,7 +25,8 @@
   "main": "dist/server.js",
   "scripts": {
     "prebuild": "rm -rf dist/*",
-    "build": "npm run build-server",
+    "build": "npm run build-browser && npm run build-server",
+    "build-browser": "webpack --config=webpack.browser.config.js",
     "build-server": "webpack --config=webpack.server.config.js",
     "develop": "node tools/develop",
     "prepare": "npm run prebuild && npm run build",
