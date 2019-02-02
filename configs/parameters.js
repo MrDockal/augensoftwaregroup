@@ -8,6 +8,7 @@ const rootPath = path.join(path.resolve(__dirname), '..');
 const configPath = rootPath + '/config';
 const testsPath = rootPath + '/tests';
 const distPath = rootPath + '/dist';
+const customerSampleDataPath = path.join(rootPath, 'src', 'data', 'SampleData.csv');
 try {
 	const localEnv = require('./env.' + environment + '.json');
 	process.env = lodash.assign(process.env, localEnv);
@@ -24,7 +25,8 @@ exports = module.exports = {
 		configPath: configPath,
 		rootPath: rootPath,
 		testsPath: testsPath,
-		distPath: distPath
+		distPath: distPath,
+		customerSampleDataPath: customerSampleDataPath,
 	},
 	app: {
 		version: version,

@@ -1,12 +1,14 @@
-import { createHttpServer } from "./serverFactory.ts/createHttpServer";
-import { createStaticServer } from "./serverFactory.ts/createStaticServer";
+import { createHttpServer } from "./serverFactory/createHttpServer";
+import { createFilesystemRepository } from "./repository/fileSystem/filesystemRepository";
+import { createApplicationRouter } from "./routes/applicationRouter";
 const parameters = require('../../configs/parameters');
 
 console.log(parameters.paths.distPath);
 const httpServer = createHttpServer({ports: {port: parameters.server.port}});
-createStaticServer(httpServer.app, parameters.paths.distPath);
 
 (async function() {
+	const filesystemRepository = await createFilesystemRepository(parameters.paths.customerSampleDataPath);
+	createApplicationRouter(httpServer.app, parameters.paths.distPath, filesystemRepository);
 	httpServer.listen();
 })();
 
