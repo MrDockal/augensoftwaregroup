@@ -14,5 +14,6 @@
 - 1h - Frontend table styling
 - 30min - Implementing frontend provider that communicates with server via RestAPI
 - 45min - Fulltext search on server
-- 3h - Implement table pagination
-**Total 7 hours, 15 minutes**
+- 3h - Implement table pagination (server & client)
+- 20min - Finalizing, writing this file and README.md
+**Total 7 hours, 35 minutes**
