@@ -12,14 +12,14 @@ class MainPage extends React.PureComponent<IOwnProps & IApiProps> {
 
 	private searchCustomersDebounced = _.debounce(
 		(searchValue: string) => {
-			this.props.api.searchCustomers(searchValue);
+			this.props.api.customer.search(searchValue);
 		},
 		1500
 	);
 
 	private loadCustomersDebounced = _.debounce(
 		() => {
-			this.props.api.loadCustomers();
+			this.props.api.customer.load();
 		},
 		1500
 	)
@@ -32,8 +32,8 @@ class MainPage extends React.PureComponent<IOwnProps & IApiProps> {
 		return (
 			<StyledApplicationPage>
 				<StyledH1>Customer Management</StyledH1>
-				<SearchCustomer isLoading={this.props.api.loadingCustomers} onValueChange={this.onInputChange}></SearchCustomer>
-				<CustomerTable customers={this.props.api.customers}/>
+				<SearchCustomer isLoading={this.props.api.customer.isLoading} onValueChange={this.onInputChange}></SearchCustomer>
+				<CustomerTable customers={this.props.api.customer.customers}/>
 			</StyledApplicationPage>
 		);
 	}

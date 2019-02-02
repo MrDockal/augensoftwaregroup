@@ -1,23 +1,23 @@
 import * as express from 'express';
 import { ICustomerRepository } from '../../repository/IRepository';
+import { paginationFilter } from '../../paginationFilter/paginationFilter';
 
 export const customerRoutes = (
 	customerRepository: ICustomerRepository,
 ) => {
 	const router = express.Router();
 	router.get('/', async(req: express.Request, res: express.Response) => {
-		const limit = req.query.limit;
-		const offset = req.query.offset;
-		const foundCustomers = await customerRepository.findAll({
-			limit,
-			offset
-		});
-		res.send(foundCustomers);
+		const page = req.query.page || 1;
+		const foundCustomers = await customerRepository.findAll();
+		const paginated = paginationFilter(foundCustomers, page);
+		res.send(paginated);
 	});
 	router.get('/search/:expression', async(req: express.Request, res: express.Response) => {
+		const page = req.query.page || 1;
 		const expression = req.params.expression;
 		const foundCustomers = await customerRepository.searchFulltext(expression);
-		res.send(foundCustomers);
+		const paginated = paginationFilter(foundCustomers, page);
+		res.send(paginated);
 	});
 	return router;
 }

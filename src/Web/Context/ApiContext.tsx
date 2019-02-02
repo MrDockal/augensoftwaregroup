@@ -1,12 +1,17 @@
 import * as React from 'react';
 import { ICustomer } from '../../Model/ICustomer';
 import axios from 'axios';
+import { IPagination } from '../../Model/IPagination';
+
+export interface ApiContextValueCustomer {
+	customers: ICustomer[];
+	isLoading: boolean;
+	load(): Promise<void>;
+	search(expression: string): Promise<void>;
+}
 
 export interface ApiContextValue {
-	customers: ICustomer[];
-	loadingCustomers: boolean;
-	loadCustomers(): Promise<void>;
-	searchCustomers(expression: string): Promise<void>;
+	customer: ApiContextValueCustomer;
 }
 
 const ApiContext = React.createContext<ApiContextValue>({
@@ -17,24 +22,32 @@ interface IProps {
 	baseUrl: string;
 }
 
-interface IState {
+interface ICustomerState {
 	customers: ICustomer[];
-	loadingCustomers: boolean;
+	isLoading: boolean;
+}
+
+interface IState {
+	customer: ICustomerState;
 }
 
 export class ApiProvider extends React.PureComponent<IProps, IState> {
 	public state: IState = {
-		customers: [],
-		loadingCustomers: false,
+		customer: {
+			customers: [],
+			isLoading: false,
+		}
 	};
 
 	public render() {
 		return (
 			<ApiContext.Provider value={{
-				customers: this.state.customers,
-				loadingCustomers: this.state.loadingCustomers,
-				loadCustomers: this.loadCustomers,
-				searchCustomers: this.searchCustomers,
+				customer: {
+					customers: this.state.customer.customers,
+					isLoading: this.state.customer.isLoading,
+					load: this.loadCustomers,
+					search: this.searchCustomers,
+				}
 			}}>
 				{this.props.children}
 			</ApiContext.Provider>
@@ -43,27 +56,37 @@ export class ApiProvider extends React.PureComponent<IProps, IState> {
 
 	private loadCustomers = async () => {
 		this.setState({
-			loadingCustomers: true,
+			customer: {
+				...this.state.customer,
+				isLoading: true,
+			}
 		});
-		const response = await axios.get<ICustomer[]>('/customer', {
+		const response = await axios.get<IPagination<ICustomer>>('/customer', {
 			baseURL: this.props.baseUrl,
 		});
 		this.setState({
-			loadingCustomers: false,
-			customers: response.data
+			customer: {
+				customers: response.data.data,
+				isLoading: false,
+			}
 		});
 	}
 
 	private searchCustomers = async(expression: string) => {
 		this.setState({
-			loadingCustomers: true,
+			customer: {
+				...this.state.customer,
+				isLoading: true,
+			}
 		});
-		const response = await axios.get<ICustomer[]>(`/customer/search/${expression}`, {
+		const response = await axios.get<IPagination<ICustomer>>(`/customer/search/${expression}`, {
 			baseURL: this.props.baseUrl,
 		});
 		this.setState({
-			loadingCustomers: false,
-			customers: response.data
+			customer: {
+				customers: response.data.data,
+				isLoading: false,
+			}
 		});
 	}
 }
